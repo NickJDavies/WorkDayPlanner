@@ -34,11 +34,15 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
     <script>
       var startWorkDay = 9;
       var endWorkDay = 18;
-      var currentTime = 11;
+      var currentTime = moment().format("hh");
+
+      //converts to 24 hour time
+      if (moment().format("a") === "pm") {
+        currentTime = parseInt(currentTime) + 12;
+      }
 
       //Renders the blocks
       function blockrender() {
@@ -50,34 +54,39 @@
           var div = $("<div>");
           var p = $("<p>");
           var hr = $("<hr>");
-          var toDo = "To do :"
+
+          // text to be added to p, div
+          var toDo = "To do :";
+          var divText = "";
 
           //colours the Elements based on the current time.
           if(currentTime > i) {
-            div.attr("style", "background-color: green");
+            div.attr("style", "background-color: green; padding: 5px");
           } else if (currentTime === i) {
-            div.attr("style", "background-color: red");
-            toDo = "(Current Hour) " + toDo;
+            div.attr("style", "background-color: red; padding: 5px");
+            divText = " (Current Time)";
           } else {
-            div.attr("style", "background-color: grey");
+            div.attr("style", "background-color: grey; padding: 5px");
           }
 
-          //Adds the text to the elements
           //changes text based on whether its am or pm
           if (i < 12) {
-            div.text(i + "am");  
+            divText = (i + "am") + divText;
           } else  if (i === 12){
-            div.text(i + "pm");
+            divText = (i + "pm") + divText; 
           } else {
-            div.text(i -12 + "pm")
+            divText = (i -12 + "pm") + divText;
           }
-          // Adds todo text to the blocks
-          p.text(toDo);
 
+          // Adds text to the blocks
+          p.text(toDo);
+          div.text(divText);
+
+          //Adds style to the div
           //Adds elements to the container div.
           div.append(p);
-          div.append(hr);
           $(".container").append(div);
+          $(".container").append(hr);
         }
       }
       blockrender();
