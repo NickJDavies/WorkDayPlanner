@@ -45,8 +45,9 @@
       var startWorkDay = 9;
       var endWorkDay = 18;
       var currentTime = moment().format("hh");
-      var toDoAtTimes = ["", "", "", "", "", "", "", "", "", ""];
-      
+      var currentDay = moment().format("dddd");
+
+      $("#currentDay").text(currentDay);
       //converts to 24 hour time
       if (moment().format("a") === "pm") {
         currentTime = parseInt(currentTime) + 12;
@@ -63,9 +64,9 @@
           var textarea = $("<textarea>");
           var button = $("<button>");
           var saveIcon = $("<i>");
+          var toDo = "";
 
           // text to be added to p, div
-          var toDo = toDoAtTimes[i-startWorkDay];
           var hourText = "";
           
           //colours the Elements based on the current time.
@@ -87,19 +88,21 @@
             hourText = (i -12 + "pm") + hourText;
           }
 
-
+          // grabs text from localstorage
           if (localStorage.getItem(i) !== null) {
             toDo = toDo + localStorage.getItem(i);
           }
+
           // Adds text to the blocks
           hour.text(hourText);
           textarea.text(toDo);
 
-          // adding id to use when save button is clicked
+          // adding id, for easy identification
           button.attr("id", i);
           textarea.attr("id", i);
 
-          //Adds style to the d iv
+          //Adds style to the div
+          textarea.attr("placeholder", "(Enter what needs to be done here!)")
           div.addClass("time-block row");
           hour.addClass("col-md-1 hour");
           textarea.addClass("col-md-10");
@@ -112,9 +115,6 @@
           div.append(textarea);
           div.append(button);
           $(".container").append(div);
-
-          
-          
         }
       }
 
