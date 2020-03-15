@@ -38,15 +38,43 @@
     <script>
       var startWorkDay = 9;
       var endWorkDay = 18;
-      var currentTime = 15;
+      var currentTime = 11;
+
+      //Renders the blocks
       function blockrender() {
+
+        //runs through for each hour
         for(i = startWorkDay; i <= endWorkDay; i++) {
+
+          //creates necessary elements
           var div = $("<div>");
-          var p = $("<p>")
-          
-          var hr = $("<hr>")
-          div.text(i + "am");
-          p.text("To Do : ")
+          var p = $("<p>");
+          var hr = $("<hr>");
+          var toDo = "To do :"
+
+          //colours the Elements based on the current time.
+          if(currentTime > i) {
+            div.attr("style", "background-color: green");
+          } else if (currentTime === i) {
+            div.attr("style", "background-color: red");
+            toDo = "(Current Hour) " + toDo;
+          } else {
+            div.attr("style", "background-color: grey");
+          }
+
+          //Adds the text to the elements
+          //changes text based on whether its am or pm
+          if (i < 12) {
+            div.text(i + "am");  
+          } else  if (i === 12){
+            div.text(i + "pm");
+          } else {
+            div.text(i -12 + "pm")
+          }
+          // Adds todo text to the blocks
+          p.text(toDo);
+
+          //Adds elements to the container div.
           div.append(p);
           div.append(hr);
           $(".container").append(div);
