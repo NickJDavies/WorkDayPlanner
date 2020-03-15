@@ -8,12 +8,19 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     />
+    
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
       integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
       crossorigin="anonymous"
     />
+
+    <link 
+    href="https://fonts.googleapis.com/css?family=Baloo+Da+2&display=swap" 
+    rel="stylesheet"
+    />
+
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
       rel="stylesheet"
@@ -38,9 +45,7 @@
       var startWorkDay = 9;
       var endWorkDay = 18;
       var currentTime = moment().format("hh");
-
-      var toDoAtTimes = [];
-      toDoEnterFunction();
+      var toDoAtTimes = ["", "", "", "", "", "", "", "", "", ""];
       
       //converts to 24 hour time
       if (moment().format("a") === "pm") {
@@ -52,54 +57,76 @@
 
         //runs through for each hour
         for(i = startWorkDay; i <= endWorkDay; i++) {
-
           //creates necessary elements
           var div = $("<div>");
-          var p = $("<p>");
-          var hr = $("<hr>");
+          var hour = $("<p>")
+          var textarea = $("<textarea>");
+          var button = $("<button>");
+          var saveIcon = $("<i>");
 
           // text to be added to p, div
-          var toDo = "To do : " + toDoAtTimes[i-startWorkDay];
-          var divText = "";
-
+          var toDo = toDoAtTimes[i-startWorkDay];
+          var hourText = "";
+          
           //colours the Elements based on the current time.
           if(currentTime > i) {
-            div.attr("style", "background-color: green; padding: 5px");
+            textarea.addClass("past");
           } else if (currentTime === i) {
-            div.attr("style", "background-color: red; padding: 5px");
-            divText = " (Current Time)";
+            textarea.addClass("present");
+            hourText = " (Current Time)";
           } else {
-            div.attr("style", "background-color: grey; padding: 5px");
+            textarea.addClass("future");
           }
 
           //changes text based on whether it's am or pm
           if (i < 12) {
-            divText = (i + "am") + divText;
+            hourText = (i + "am") + hourText;
           } else  if (i === 12){
-            divText = (i + "pm") + divText; 
+            hourText = (i + "pm") + hourText; 
           } else {
-            divText = (i -12 + "pm") + divText;
+            hourText = (i -12 + "pm") + hourText;
           }
 
+
+          if (localStorage.getItem(i) !== null) {
+            toDo = toDo + localStorage.getItem(i);
+          }
           // Adds text to the blocks
-          p.text(toDo);
-          div.text(divText);
+          hour.text(hourText);
+          textarea.text(toDo);
 
-          //Adds style to the div
+          // adding id to use when save button is clicked
+          button.attr("id", i);
+          textarea.attr("id", i);
+
+          //Adds style to the d iv
+          div.addClass("time-block row");
+          hour.addClass("col-md-1 hour");
+          textarea.addClass("col-md-10");
+          button.addClass("col-md-1 saveBtn btn")
+          saveIcon.addClass("fas fa-save")
+
           //Adds elements to the container div.
-          div.append(p);
+          button.append(saveIcon);
+          div.append(hour);
+          div.append(textarea);
+          div.append(button);
           $(".container").append(div);
-          $(".container").append(hr);
-        }
-      }
-      blockrender();
 
-      function toDoEnterFunction() {
-        for(i = startWorkDay; i <= endWorkDay; i++) {
-          var toBeDone = prompt("What do you need to do at " + i);
-          toDoAtTimes.push(toBeDone);
+          
+          
         }
       }
+
+      $(document).on("click", ".saveBtn", function() {
+        var buttonID = $(this).attr("id");
+        var searcher = "#" + buttonID;
+        var textareaText = $(searcher).val();
+
+        localStorage.setItem(buttonID, textareaText);
+      });
+      
+      blockrender();
     </script>
   </body>
 </html>
